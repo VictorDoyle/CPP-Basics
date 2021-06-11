@@ -1,25 +1,26 @@
 #include <iostream>
+#include <ctime>
 
-void GameIntroduction() {
+
+void GameIntroduction(int Difficulty) {
  /* std = namespace;   :: is the scope operator ; c out is the output stream to terminal */
     /* << is insertion operator */
 
-    std::cout << "You are approaching a dark corridor with a door at its end.";
-    std::cout << std::endl;
-    std::cout << "The door is locked by means of padlock with a secret combination.";
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << "You need to enter the correct combination to pass";
-    std::cout << std::endl;
+    std::cout << "\n\nYou are approaching a dark corridor with a door at its end.\n";
+    std::cout << "The door is locked by means of padlock with a secret combination.\n\n";
+    std::cout << "You need to enter the correct combination to pass into the Level " << Difficulty;
+    std::cout << " Top Secret Facility\n";
 }
 
 
-void PlayGame() {
+bool PlayGame(int Difficulty) {
 
-    GameIntroduction();
-    int CodeA = 4;
-    int CodeB = 12;
-    int CodeC = 2;
+    GameIntroduction(Difficulty);
+    int CodeA = rand() % Difficulty + 1;
+    int CodeB = rand() % Difficulty + 1;
+    int CodeC = rand() % Difficulty + 1;
+
+
 
     int SumOfCodes = CodeA + CodeB + CodeC;
     int MultipliedCodes = CodeA * CodeB * CodeC;
@@ -42,19 +43,35 @@ void PlayGame() {
     GuessSum = PlayerGuessA + PlayerGuessB + PlayerGuessC;
     GuessProduct = PlayerGuessA * PlayerGuessB * PlayerGuessC;
 
-    bool PlayerFoundPadCode = false;
     if(SumOfCodes == GuessSum && MultipliedCodes == GuessProduct ) {
-        std::cout << "\nYou found the right combination!";
-        PlayerFoundPadCode = true; 
+        std::cout << "\nYou found the right combination! Keep Going To Increase Danger Difficulty";
+        return true; 
     } else {
-        std::cout << "\nYour combination was wrong\n"; 
-        PlayerFoundPadCode = false;
+        std::cout << "\nYour combination was wrong\n You'll Have To Try Again"; 
+        return false;
     }
 
 }
 
 int main(){
+    srand(time(NULL));
 
-    PlayGame();
+    int LevelDifficulty = 1;
+
+    int const MaxDifficulty = 8;
+
+    while(LevelDifficulty <= MaxDifficulty) {
+    bool bLevelComplete = PlayGame(LevelDifficulty);
+    /* clear errors */
+    std::cin.clear();
+    /* discard the buffer */
+   std::cin.ignore();
+
+    if(bLevelComplete) {
+        ++LevelDifficulty;
+    }
+
+    }
+    std::cout << "\n Nice work. You've broken down all the padlocks on the way to the Center Of The Maze.\n";
     return 0;
 }
